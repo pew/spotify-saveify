@@ -1,27 +1,35 @@
 <template>
   <div class="hello">
+    <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand">saveify</a>
+      <button class="btn btn-outline-primary my-2 my-sm-0" type="button" v-on:click="login()" v-if="!access_token">login to spotify</button><button class="btn btn-outline-primary my-2 my-sm-0" v-on:click="logout()" v-else>logout</button>
+    </nav>
+
     <div class="container">
-      <h1>Saveify</h1>
-      <h3 v-if="access_token">hello <a v-bind:href="userProfile">{{ userID }}</a></h3>
-      <h3 v-if="currentSongId">currently playing</h3><h3 v-else>nothing playing right now</h3>
+      <br>
+      <p class="h2" v-if="access_token">hello, {{ userID }}</p>
+      <br>
+      <p class="h4" v-if="currentSongId">currently playing:</p><p class="h4" v-else>nothing playing right now</p>
+
       <div v-if="currentSongId">
         <ul>
           <li>
             {{ currentArtistName }} - {{ currentSongName }}
           </li>
         </ul>
-        <div v-if="!savedAlready && !newlySaved">
-          <button v-on:click="saveSong()">save this song</button>
+
+        <div class="text-center" v-if="!savedAlready && !newlySaved">
+          <button class="btn btn-outline-primary btn-lg" v-on:click="saveSong()">save this song</button>
         </div>
+
         <div v-if="saveMessage">
           <span>{{ saveMessage }}</span>
         </div>
+
         <div v-if="savedAlready">
           <span>already saved</span>
         </div>
       </div>
-      <button v-on:click="login()" v-if="!access_token">login to spotify</button>
-      <button v-on:click="logout()" v-else>logout</button>
     </div>
   </div>
 </template>
