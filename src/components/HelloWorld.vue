@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       client_id: 'dc766e86ba004ababb36d263372a403d',
-      redirect_uri: 'http://localhost:8080/',
+      redirect_uri: window.location.origin + '/',
       scope: 'user-read-private user-library-read user-read-email user-read-playback-state user-library-modify',
       hashParams: {},
       stateKey: 'spotify_auth_state',
