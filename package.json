@@ -36,8 +36,10 @@
     }
   },
   "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
+    ">1.0%",
+    "not op_mini all",
+    "not ie 11",
+    "not samsung >5",
+    "not UCAndroid >1"
   ]
 }
