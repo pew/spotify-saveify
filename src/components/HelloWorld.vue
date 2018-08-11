@@ -18,16 +18,9 @@
           </li>
         </ul>
 
-        <div class="text-center" v-if="!savedAlready && !newlySaved">
-          <button class="btn btn-outline-primary btn-lg" v-on:click="saveSong()">save this song</button>
-        </div>
-
-        <div v-if="saveMessage">
-          <span>{{ saveMessage }}</span>
-        </div>
-
-        <div v-if="savedAlready">
-          <span>already saved</span>
+        <div class="text-center">
+          <button v-if="!savedAlready" class="btn btn-outline-primary btn-lg" v-on:click="saveSong()">save this song</button>
+          <button v-else class="btn btn-outline-primary btn-lg" v-on:click="deleteSong()">remove this song</button>
         </div>
       </div>
     </div>
@@ -53,8 +46,6 @@ export default {
       currentArtistName: '',
       currentSongName: '',
       savedAlready: false,
-      newlySaved: false,
-      saveMessage: '',
       repeatInterval: 10000
     }
   },
@@ -125,10 +116,24 @@ export default {
         })
       }).then(res => {
         if(res.status === 200) {
-          this.newlySaved = true;
-          this.saveMessage = 'saved'
+          this.savedAlready = true;
         } else {
-          this.saveMessage = 'error'
+          alert('error')
+        }
+      })
+    },
+    deleteSong: function() {
+      fetch('https://api.spotify.com/v1/me/tracks?ids=' + this.currentSongId, {
+        method: 'delete',
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          'Authorization': 'Bearer ' + this.access_token
+        }
+      }).then(res => {
+        if(res.status === 200) {
+          this.savedAlready = false;
+        } else {
+          alert('error')
         }
       })
     },
