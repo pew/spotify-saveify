@@ -54,7 +54,8 @@ export default {
       currentSongName: '',
       savedAlready: false,
       newlySaved: false,
-      saveMessage: ''
+      saveMessage: '',
+      repeatInterval: 10000
     }
   },
   created: function (){
@@ -94,6 +95,7 @@ export default {
       })
     },
     currentSong: function() {
+      setTimeout(this.currentSong, this.repeatInterval)
       fetch('https://api.spotify.com/v1/me/player/currently-playing', {
         method: 'get',
         headers: {
