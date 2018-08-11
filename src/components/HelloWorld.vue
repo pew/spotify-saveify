@@ -19,8 +19,12 @@
         </ul>
 
         <div class="text-center">
-          <button v-if="!savedAlready" class="btn btn-outline-primary btn-lg" v-on:click="saveSong()">save this song</button>
-          <button v-else class="btn btn-outline-primary btn-lg" v-on:click="deleteSong()">remove this song</button>
+          <div class="btn-group" role="group" aria-label="Button group">
+            <button class="btn btn-outline-primary btn-lg" v-on:click="previousSong()">previous song</button>
+            <button v-if="!savedAlready" class="btn btn-outline-primary btn-lg" v-on:click="saveSong()">save this song</button>
+            <button v-else class="btn btn-outline-primary btn-lg" v-on:click="deleteSong()">remove this song</button>
+            <button class="btn btn-outline-primary btn-lg" v-on:click="nextSong()">next song</button>
+          </div>
         </div>
       </div>
     </div>
@@ -34,7 +38,7 @@ export default {
     return {
       client_id: 'dc766e86ba004ababb36d263372a403d',
       redirect_uri: window.location.origin + '/',
-      scope: 'user-read-private user-library-read user-read-email user-read-playback-state user-library-modify',
+      scope: 'user-read-private user-library-read user-read-email user-read-playback-state user-library-modify user-modify-playback-state',
       hashParams: {},
       stateKey: 'spotify_auth_state',
       state: '',
@@ -50,7 +54,6 @@ export default {
     }
   },
   created: function (){
-    // var storedState = localStorage.getItem(this.stateKey)
     var e, r = /([^&;=]+)=?([^&;]*)/g,
         q = window.location.hash.substring(1);
     // eslint-disable-next-line
@@ -93,6 +96,9 @@ export default {
           'Authorization': 'Bearer ' + this.access_token
         }
       }).then(res => res.json()).then(res => {
+        if(this.currentSongId === res.item.id) {
+          return
+        }
         this.currentSongId = res.item.id;
         this.currentArtistName = res.item.artists[0].name
         this.currentSongName = res.item.name;
@@ -132,6 +138,34 @@ export default {
       }).then(res => {
         if(res.status === 200) {
           this.savedAlready = false;
+        } else {
+          alert('error')
+        }
+      })
+    },
+    previousSong: function() {
+      fetch('https://api.spotify.com/v1/me/player/previous', {
+        method: 'post',
+        headers: {
+          'Authorization': 'Bearer ' + this.access_token
+        }
+      }).then(res => {
+        if(res.status === 204) {
+          this.currentSong();
+        } else {
+          alert('error')
+        }
+      })
+    },
+    nextSong: function() {
+      fetch('https://api.spotify.com/v1/me/player/next', {
+        method: 'post',
+        headers: {
+          'Authorization': 'Bearer ' + this.access_token
+        }
+      }).then(res => {
+        if(res.status === 204) {
+          this.currentSong();
         } else {
           alert('error')
         }
