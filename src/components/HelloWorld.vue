@@ -14,7 +14,7 @@
       <div v-if="currentSongId">
         <ul>
           <li>
-            {{ currentArtistName }} - {{ currentSongName }}
+            <a :href="currentArtistNameUri">{{ currentArtistName }}</a> - <a :href="currentSongIdUri">{{ currentSongName }}</a>
           </li>
         </ul>
 
@@ -47,7 +47,9 @@ export default {
       userProfile: '',
       meLoaded: false,
       currentSongId: '',
+      currentSongIdUri: '',
       currentArtistName: '',
+      currentArtistNameUri: '',
       currentSongName: '',
       savedAlready: false,
       repeatInterval: 10000
@@ -100,7 +102,9 @@ export default {
           return
         }
         this.currentSongId = res.item.id;
-        this.currentArtistName = res.item.artists[0].name
+        this.currentSongIdUri = res.item.uri;
+        this.currentArtistName = res.item.artists[0].name;
+        this.currentArtistNameUri = res.item.artists[0].uri;
         this.currentSongName = res.item.name;
         fetch('https://api.spotify.com/v1/me/tracks/contains?ids=' + this.currentSongId, {
           method: 'get',
